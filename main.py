@@ -1,11 +1,12 @@
 # import sys
-from typing import Union
+from typing import Union, Dict
 
 
 class PatternMatcher:
 
     original_text: str  = ""
     original_pattern: str = ""
+    capture_groups: Dict[str, str] = {}
 
     def match(self, text: str, pattern: str) -> Union[bool, None]:
         self.original_text = text
@@ -75,25 +76,46 @@ class PatternMatcher:
             if any(char in original_text for char in set_part):
                 return self.match_here(text, rest)
             return False
+    
+
+    
     '''
     Create a 'match_type' that handles cases for \\w, \\d, \\s, etc.
-    and within that, i will handle cases for +, *, ?, etc.
     '''
     def match_type(self, text, pattern) -> Union[bool, None]:
         print(f"Matched escape character so entering match_type: currently at  {pattern[0]} and {text[0]}")
-        if pattern[0] == 'w' and text[0].isalnum():
+        if pattern[0] == 'w' and text[0].isalnum() or text[0] == '_':
             print(f"Matched word character '{text[0]}' with pattern '{pattern[0]}'")
             return self.match_here(text[1:], pattern[1:])
 
         if pattern[0] == 'd' and text[0].isdigit():
             print(f"Matched digit character '{text[0]}' with pattern '{pattern[0]}'")
             return self.match_here(text[1:], pattern[1:])
+
+        if pattern[0] == 's' and text[0].isspace():
+            print(f"Matched whitespace character '{text[0]}' with pattern '{pattern[0]}'")
+            return self.match_here(text[1:], pattern[1:])
+        
+        if pattern[0] == 'W' and not text[0].isalnum():
+            print(f"Matched a none word character '{text[0]}' with pattern '{pattern[0]}'")
+            return self.match_here(text[1:], pattern[1:])
+
+        if pattern[0] == 'D' and not text[0].isdigit():
+            print(f"Matched a none digit character '{text[0]}' with pattern '{pattern[0]}'")
+            return self.match_here(text[1:], pattern[1:])
+
+        if pattern[0] == 'S' and not text[0].isspace():
+            print(f"Matched a none whitespace character '{text[0]}' with pattern '{pattern[0]}'")
+            return self.match_here(text[1:], pattern[1:])
+        
         return False
+
+# PatternMatcher() end
 
 
 def main() -> None:
     matcher = PatternMatcher()
-    matcher.match("abc2a", "^a\\wc\\d[abc]\\w")
+    matcher.match("abc2a", "^a\\wc\\d[abc]\\w+")
 
     # if len(sys.argv) < 3:
     #     print("Usage: ./run_pygrep.sh <word> <regex>")
