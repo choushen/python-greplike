@@ -47,6 +47,9 @@ class PatternMatcher:
             print("Matched end of line character")
             return not text
         
+        if pattern[1] in '*+?':
+            self.quantifiers(text, pattern)
+
         # Literal match
         if (text and pattern[0] == '.') or (pattern[0] == text[0]):
             print(f"Matched character '{pattern[0]}' with text '{text[0]}'")
@@ -59,10 +62,10 @@ class PatternMatcher:
         if pattern[0] == '[':
             if pattern[1] == '^':
                 print(f"Matched character set negation '{pattern[1]}'")
-                return self.match_set(self.original_text, text, pattern[2:])
+                return self.match_set(text, pattern[2:])
             else:
                 print(f"Matched character set '{pattern[0]}'")
-                return self.match_set(self.original_text, text, pattern[1:])
+                return self.match_set(text, pattern[1:])
 
                 
         
@@ -71,14 +74,14 @@ class PatternMatcher:
     # match_here() end
 
 
-    def match_set(self, original_text: str, text: str, pattern: str) -> Union[bool, None]:
-            set_part, rest = pattern.split(']', 1)
-            if any(char in original_text for char in set_part):
-                return self.match_here(text, rest)
+    def match_set(self, text: str, pattern: str) -> Union[bool, None]:
+            set_to_match, rest_of_pattern = pattern.split(']', 1)
+            if text[0] in  set_to_match:
+                return self.match_here(text[1:], rest_of_pattern)
             return False
     
 
-    
+
     '''
     Create a 'match_type' that handles cases for \\w, \\d, \\s, etc.
     '''
@@ -108,6 +111,12 @@ class PatternMatcher:
             print(f"Matched a none whitespace character '{text[0]}' with pattern '{pattern[0]}'")
             return self.match_here(text[1:], pattern[1:])
         
+        return False
+    
+    def quantifiers(self, text: str, pattern: str) -> Union[bool, None]:
+        print(f"Matched quantifier '{pattern[0]}'")
+
+
         return False
 
 # PatternMatcher() end
