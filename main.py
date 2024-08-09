@@ -1,11 +1,13 @@
-import sys
+# import sys
+from typing import Union
+
 
 class PatternMatcher:
 
-    original_text = ""
-    original_pattern = ""
+    original_text: str  = ""
+    original_pattern: str = ""
 
-    def match(self, text, pattern):
+    def match(self, text: str, pattern: str) -> Union[bool, None]:
         self.original_text = text
         self.original_pattern = pattern
 
@@ -29,7 +31,7 @@ class PatternMatcher:
     # match() end
 
 
-    def match_here(self, text, pattern):
+    def match_here(self, text: str, pattern: str) -> Union[bool, None]:
         print(f'match_here: text: {text} and pattern: {pattern}')
 
         # If pattern is empty, return True because we have matched all characters
@@ -68,7 +70,7 @@ class PatternMatcher:
     # match_here() end
 
 
-    def match_set(self, original_text, text, pattern):
+    def match_set(self, original_text: str, text: str, pattern: str) -> Union[bool, None]:
             set_part, rest = pattern.split(']', 1)
             if any(char in original_text for char in set_part):
                 return self.match_here(text, rest)
@@ -77,7 +79,7 @@ class PatternMatcher:
     Create a 'match_type' that handles cases for \\w, \\d, \\s, etc.
     and within that, i will handle cases for +, *, ?, etc.
     '''
-    def match_type(self, text, pattern):
+    def match_type(self, text, pattern) -> Union[bool, None]:
         print(f"Matched escape character so entering match_type: currently at  {pattern[0]} and {text[0]}")
         if pattern[0] == 'w' and text[0].isalnum():
             print(f"Matched word character '{text[0]}' with pattern '{pattern[0]}'")
@@ -86,8 +88,10 @@ class PatternMatcher:
         if pattern[0] == 'd' and text[0].isdigit():
             print(f"Matched digit character '{text[0]}' with pattern '{pattern[0]}'")
             return self.match_here(text[1:], pattern[1:])
+        return False
 
-def main():
+
+def main() -> None:
     matcher = PatternMatcher()
     matcher.match("abc2a", "^a\\wc\\d[abc]\\w")
 

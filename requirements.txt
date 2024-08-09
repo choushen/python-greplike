@@ -1,0 +1,7 @@
+annotated-types==0.7.0
+mypy==1.11.1
+mypy-extensions==1.0.0
+pydantic==2.8.2
+pydantic_core==2.20.1
+ruff==0.5.7
+typing_extensions==4.12.2
