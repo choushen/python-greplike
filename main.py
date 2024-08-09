@@ -47,7 +47,7 @@ class PatternMatcher:
             print("Matched end of line character")
             return not text
         
-        if pattern[1] in '*+?':
+        if len(pattern) > 1 and pattern[1] in '*+?':
             self.quantifiers(text, pattern)
 
         # Literal match
@@ -124,7 +124,7 @@ class PatternMatcher:
 
 def main() -> None:
     matcher = PatternMatcher()
-    matcher.match("abc2a", "^a\\wc\\d[abc]\\w+")
+    matcher.match("abc2aqq", "^a\\wc\\d[abc]qq")
 
     # if len(sys.argv) < 3:
     #     print("Usage: ./run_pygrep.sh <word> <regex>")
