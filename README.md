@@ -35,7 +35,9 @@ Solution based on the cheatsheet over at https://regexr.com/
 
 ## Quantifiers & Alternation
 - [ ] Implement support for `*` (0 or more occurrences)
-- [x] Implement support for `+` (1 or more occurrences)
+- [ ] Implement support for `+` (1 or more occurrences)
+    - [x] Implement support for `+` (1 or more occurrences) for literal characters
+    - [ ] Implement support for `+` (1 or more occurrences) for character classes
 - [ ] Implement support for `?` (0 or 1 occurrence)
 - [ ] Implement support for `{n}` (exactly n occurrences)
 - [ ] Implement support for `{n,}` (n or more occurrences)
