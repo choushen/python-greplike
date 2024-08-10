@@ -1,5 +1,5 @@
 # import sys
-from typing import Union, Dict
+from typing import Dict
 
 
 class PatternMatcher:
@@ -8,7 +8,7 @@ class PatternMatcher:
     original_pattern: str = ""
     capture_groups: Dict[str, str] = {}
 
-    def match(self, text: str, pattern: str) -> Union[bool, None]:
+    def match(self, text: str, pattern: str) -> bool:
         self.original_text = text
         self.original_pattern = pattern
 
@@ -32,7 +32,7 @@ class PatternMatcher:
     # match() end
 
 
-    def match_here(self, text: str, pattern: str) -> Union[bool, None]:
+    def match_here(self, text: str, pattern: str) -> bool:
         print(f'match_here: text: {text} and pattern: {pattern}')
 
         # If pattern is empty, return True because we have matched all characters
@@ -74,7 +74,7 @@ class PatternMatcher:
     # match_here() end
 
 
-    def match_set(self, text: str, pattern: str) -> Union[bool, None]:
+    def match_set(self, text: str, pattern: str) -> bool:
             set_to_match, rest_of_pattern = pattern.split(']', 1)
             if text[0] in  set_to_match:
                 return self.match_here(text[1:], rest_of_pattern)
@@ -85,7 +85,7 @@ class PatternMatcher:
     '''
     Create a 'match_type' that handles cases for \\w, \\d, \\s, etc.
     '''
-    def match_type(self, text, pattern) -> Union[bool, None]:
+    def match_type(self, text, pattern) -> bool:
         print(f"Matched escape character so entering match_type: currently at  {pattern[0]} and {text[0]}")
         if pattern[0] == 'w' and text[0].isalnum() or text[0] == '_':
             print(f"Matched word character '{text[0]}' with pattern '{pattern[0]}'")
@@ -112,8 +112,9 @@ class PatternMatcher:
             return self.match_here(text[1:], pattern[1:])
         
         return False
-    
-    def quantifiers(self, text: str, pattern: str) -> Union[bool, None]:
+
+
+    def quantifiers(self, text: str, pattern: str) -> bool:
         print(f"Matched quantifier '{pattern[0]}'")
 
 
