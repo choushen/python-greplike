@@ -46,13 +46,13 @@ class PatternMatcher:
         if pattern[0] == '$' and not pattern[1:]:
             print("Matched end of line character")
             return not text
-        
-        if len(pattern) > 1 and pattern[1] in '*+?':
-            self.quantifiers(text, pattern)
 
         # Literal match
         if (text and pattern[0] == '.') or (pattern[0] == text[0]):
             print(f"Matched character '{pattern[0]}' with text '{text[0]}'")
+            if len(pattern) > 1 and pattern[1] in '+?*':
+                return self.handle_quantifiers(pattern[0], text[1:], pattern[1:])
+            
             return self.match_here(text[1:], pattern[1:])
         
         if pattern[0] == '\\':
@@ -87,6 +87,7 @@ class PatternMatcher:
     '''
     def match_type(self, text, pattern) -> bool:
         print(f"Matched escape character so entering match_type: currently at  {pattern[0]} and {text[0]}")
+
         if pattern[0] == 'w' and text[0].isalnum() or text[0] == '_':
             print(f"Matched word character '{text[0]}' with pattern '{pattern[0]}'")
             return self.match_here(text[1:], pattern[1:])
@@ -113,9 +114,24 @@ class PatternMatcher:
         
         return False
 
-
-    def quantifiers(self, text: str, pattern: str) -> bool:
+    # pattern[0] = q, string[0] = q
+    # pattern[1] = +, string[1] = ?
+    def handle_quantifiers(self, char: str, text: str, pattern: str) -> bool:
         print(f"Matched quantifier '{pattern[0]}'")
+
+        split_index = text.rfind(char) + 1
+        part1 = text[:split_index] # the first part of the string, could be empty
+        part2 = text[split_index:] # the rest of the string
+
+        if pattern[0] == '+' and len(part1) < 1:
+            print(f"Failed to match quantifier '{pattern[0]}'")
+            return False
+        else:
+            print(f"Matched quantifier '{pattern[0]}'")
+            return self.match_here(part2, pattern[1:])
+
+
+
 
 
         return False
@@ -125,7 +141,8 @@ class PatternMatcher:
 
 def main() -> None:
     matcher = PatternMatcher()
-    matcher.match("abc2aqq", "^a\\wc\\d[abc]qq")
+    matcher.match("abc2aqqqqqqqxyz", "abc2aq+xyz")
+    print("Done")
 
     # if len(sys.argv) < 3:
     #     print("Usage: ./run_pygrep.sh <word> <regex>")
